@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans KR", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: "Noto Serif KR", "Playfair Display", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom palette matching the lawyer suit color and tan accents */
+  --color-brand-navy-950: #0F1A2B; /* Deepest Navy (Footer) */
+  --color-brand-navy-900: #1A2A44; /* Core Professional Navy */
+  --color-brand-navy-850: #253754; 
+  --color-brand-navy-800: #304766;
+  --color-brand-navy-700: #3E5A80;
+  --color-brand-navy-600: #51719C;
+  --color-brand-navy-100: #E2E8F0;
+  
+  --color-brand-tan: #D2B48C; /* Theme Golden Tan */
+  --color-brand-cognac: #C05E3D; /* Accent Terracotta */
+  --color-brand-terracotta: #C05E3D;
+  --color-brand-terracotta-hover: #A84F32;
+}
+
+/* Custom styles for professional layout and smooth interactions */
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-sans);
+}
+
+body {
+  background-color: #F8F9FA;
+  color: #1A2A44;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.02em;
+}
+
+/* Custom scrollbar to keep layout highly polished (Navy & Gold theme) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8F9FA;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D2B48C;
+}
+

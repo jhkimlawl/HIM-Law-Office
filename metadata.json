@@ -1,0 +1,8 @@
+{
+  "name": "HIM Law Office",
+  "description": "대형 로펌 파트너 출신의 노하우, 사무장 없는 1:1 대표변호사 직접 소통과 책임 실무를 제공하는 힘 법률사무소 공식 홈페이지",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

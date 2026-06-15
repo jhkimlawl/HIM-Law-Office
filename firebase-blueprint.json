@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "Reservation": {
+      "title": "Reservation",
+      "description": "Consultation reservations from clients",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique reservation ID starting with HIM-" },
+        "name": { "type": "string", "description": "Client name" },
+        "phone": { "type": "string", "description": "Client cell phone number" },
+        "email": { "type": "string", "description": "Client email address" },
+        "date": { "type": "string", "description": "Consultation target date (YYYY-MM-DD)" },
+        "time": { "type": "string", "description": "Consultation target time (HH:MM)" },
+        "type": { "type": "string", "enum": ["visit", "phone", "video"], "description": "Consultation medium" },
+        "subject": { "type": "string", "description": "Legal consultation subject" },
+        "description": { "type": "string", "description": "Case background and facts details" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when reservation was created" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "completed", "canceled"], "description": "Workflow step" },
+        "note": { "type": "string", "description": "Internal record added by representative lawyer" }
+      },
+      "required": ["id", "name", "phone", "date", "time", "type", "subject", "createdAt", "status"]
+    },
+    "Setting": {
+      "title": "Setting",
+      "description": "Global application configuration settings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "portraitUrl": { "type": "string", "description": "URL of the representative lawyer custom photo portrait" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "portraitUrl", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/reservations/{reservationId}": {
+      "schema": "Reservation",
+      "description": "Consultation bookings collection"
+    },
+    "/settings/{settingId}": {
+      "schema": "Setting",
+      "description": "App settings configuration documents"
+    }
+  }
+}

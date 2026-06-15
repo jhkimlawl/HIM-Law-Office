@@ -1,0 +1,87 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 1. Global Catch-All Safety Net (Default Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // 2. Core Primitives & Verification Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+    
+    function isAdmin() {
+      return isEmailVerified() && (request.auth.token.email == 'jhkimlawl@gmail.com' || request.auth.token.email == 'jhk@himlaw.co.kr');
+    }
+    
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_-]+$');
+    }
+    
+    function incoming() {
+      return request.resource.data;
+    }
+    
+    function existing() {
+      return resource.data;
+    }
+    
+    // 3. Validation Blueprints (Schema Safeguards)
+    function isValidReservation(data) {
+      return data.keys().hasAll(['id', 'name', 'phone', 'date', 'time', 'type', 'subject', 'createdAt', 'status'])
+        && data.id is string && data.id.size() <= 64
+        && data.name is string && data.name.size() <= 100
+        && data.phone is string && data.phone.size() <= 30
+        && (!('email' in data) || (data.email is string && data.email.size() <= 150))
+        && data.date is string && data.date.size() == 10
+        && data.time is string && data.time.size() == 5
+        && data.type in ['visit', 'phone', 'video']
+        && data.subject is string && data.subject.size() <= 300
+        && (!('description' in data) || (data.description is string && data.description.size() <= 3000))
+        && data.status in ['pending', 'confirmed', 'completed', 'canceled']
+        && (!('note' in data) || (data.note is string && data.note.size() <= 4000));
+    }
+    
+    function isValidSetting(data) {
+      return data.keys().hasAll(['id', 'portraitUrl', 'updatedAt'])
+        && data.id is string && data.id.size() <= 128
+        && data.portraitUrl is string && data.portraitUrl.size() <= 1500000;
+    }
+
+    // 4. Collection Matches
+    match /reservations/{reservationId} {
+      allow read: if isAdmin();
+      
+      // Let patients/clients request reservations on the landing page
+      allow create: if isValidId(reservationId) 
+                    && isValidReservation(incoming())
+                    && incoming().status == 'pending'
+                    && incoming().createdAt is string
+                    && incoming().createdAt.size() <= 40;
+                    
+      // Only admin can configure notes or change status values              
+      allow update: if isAdmin()
+                    && isValidReservation(incoming())
+                    && incoming().createdAt == existing().createdAt;
+                    
+      allow delete: if isAdmin();
+    }
+    
+    match /settings/{settingId} {
+      // Configuration read by public to construct representative images on frontend
+      allow read: if true;
+      
+      allow write: if isAdmin() 
+                    && isValidId(settingId)
+                    && isValidSetting(incoming())
+                    && incoming().updatedAt is string
+                    && incoming().updatedAt.size() <= 40;
+    }
+  }
+}
